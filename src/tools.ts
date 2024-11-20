@@ -22,4 +22,16 @@ export const tools: Tool[] = [
         path: "/base64",
         component: () => import("./views/tools/Base64Util.vue"),
     },
+    {
+        title: "URL Encoder/Decoder",
+        description: "A utility that lets you quickly encode and decode URLs",
+        path: "/urlencoder",
+        component: () => import("./views/tools/URLEncoder.vue"),
+    },
+    {
+        title: "Password Generator",
+        description: "A secure password generator",
+        path: "/password-generator",
+        component: () => import("./views/tools/PasswordGenerator.vue"),
+    },
 ];

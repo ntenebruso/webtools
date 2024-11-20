@@ -1,12 +1,24 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import Textarea from "../../components/ui/Textarea.vue";
+import Button from "../../components/ui/Button.vue";
 
 const inputValue = ref("");
 const webSafe = ref(false);
 const mode = ref<"encode" | "decode">("encode");
 const inputError = ref(false);
 const outputValue = ref("");
+
+function swap() {
+    mode.value = mode.value == "encode" ? "decode" : "encode";
+    const tmp = inputValue.value;
+    inputValue.value = outputValue.value;
+    outputValue.value = tmp;
+}
+
+function copyOutputToClipboard() {
+    navigator.clipboard.writeText(outputValue.value);
+}
 
 function stringToBin(str: string) {
     const bytes = new TextEncoder().encode(str);
@@ -68,7 +80,7 @@ watchEffect(() => {
 
 <template>
     <h1 class="mt-4 text-4xl font-bold">Base64 Encoder and Decoder</h1>
-    <label for="inputField" class="text-lg block mt-4">Input:</label>
+    <label for="inputField" class="text-lg mt-4 inline-block">Input:</label>
     <Textarea
         v-model.lazy="inputValue"
         id="inputField"
@@ -93,6 +105,10 @@ watchEffect(() => {
         <input type="radio" id="decode" v-model="mode" value="decode" />
     </div>
 
+    <div class="flex justify-center">
+        <Button @click="swap" class="mt-2" variant="secondary">swap</Button>
+    </div>
+
     <label for="outputField" class="text-lg block mt-4">Output:</label>
     <Textarea
         id="outputField"
@@ -103,4 +119,5 @@ watchEffect(() => {
     <p class="text-red-500 text-lg" v-if="inputError">
         Input contains an error!
     </p>
+    <Button @click="copyOutputToClipboard" class="mt-2">Copy</Button>
 </template>

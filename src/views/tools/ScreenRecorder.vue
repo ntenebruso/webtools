@@ -3,6 +3,7 @@ import { ref, onMounted, useTemplateRef } from "vue";
 import Button from "../../components/ui/Button.vue";
 import Select from "../../components/ui/Select.vue";
 import { ScreenRecorder } from "../../utils/recorder";
+import { CircleIcon } from "lucide-vue-next";
 
 const videoPreview = useTemplateRef<HTMLVideoElement>("videoPreview");
 const recorder = new ScreenRecorder();
@@ -46,7 +47,7 @@ const stop = () => recorder.stopRecording();
         :src="finalVideoURL || ''"
         :controls="finalVideoURL ? true : false"
     ></video>
-    <div class="flex gap-x-2 mt-4">
+    <div class="flex gap-x-2 mt-4 items-center">
         <Button :disabled="recordingStarted" @click="start"
             >Start recording</Button
         >
@@ -61,11 +62,18 @@ const stop = () => recorder.stopRecording();
             class="text-blue-500 hover:underline"
             >Download</a
         >
+        <div class="flex-1"></div>
+        <div class="text-red-400 font-semibold" v-if="recordingStarted">
+            <CircleIcon
+                class="inline fill-red-400 align-middle w-4 h-4 animate-pulse"
+            />
+            Recording in progress
+        </div>
     </div>
     <hr class="border-0 h-px bg-zinc-700 my-4" />
     <label for="micSelect">Microphone:</label>
     <Select id="micSelect" :disabled="recordingStarted" @change="onMicSelected">
-        <option value="disablemic">No Mic</option>
+        <option value="disablemic" selected>No Mic</option>
         <option v-for="mic in mics" :value="mic.deviceId">
             {{ mic.label }}
         </option>
